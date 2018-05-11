@@ -79,7 +79,7 @@ def get_filechanges(repo,revision,parents,mleft):
   l,c,r=[],[],[]
   for p in parents:
     if p<0: continue
-    mright=repo.changectx(p).manifest()
+    mright=revsymbol(repo,str(p)).manifest()
     l,c,r=split_dict(mleft,mright,l,c,r)
   l.sort()
   c.sort()
