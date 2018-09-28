@@ -13,11 +13,19 @@ def loadJson(filePath):
             json_data.close()
             return jsonData
 
-def deleteBranch(branch):
+def getLocalBranches():
+    return check_output('for branch in `git branch -a | grep remotes | grep -v HEAD | grep -v master `; do git branch --track ${branch#remotes/origin/} $branch done')
+
+def deleteBranchLocal(branch):
+    return check_output('git branch -D {}'.format(branch), shell=True)
+
+def deleteBranchRemote(branch):
     return check_output('git push origin :{}'.format(branch), shell=True)
 
 def removeUnusedBranches(list_branches):
-    return [deleteBranch(branch) for branch in list_branches['values'] if list_branches['values']]
+    getLocalBranches()
+    [deleteBranchLocal(branch) for branch in list_branches['values'] if list_branches['values']]
+    return [deleteBranchRemote(branch) for branch in list_branches['values'] if list_branches['values']]
         
 if __name__ == '__main__':
     path = os.path.dirname(os.path.abspath(__file__))
